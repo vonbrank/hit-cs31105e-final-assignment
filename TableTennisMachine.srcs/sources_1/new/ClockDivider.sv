@@ -25,8 +25,8 @@ module ClockDivider(originCLK, dividedCLK);
     output dividedCLK;
     reg tempDivCLK;
     reg [31: 0] count;
-    reg [31: 0] ratio = 'd2;
-    // reg [31: 0] ratio = 'd100_000;
+    // reg [31: 0] ratio = 'd2;
+    reg [31: 0] ratio = 'd100_000;
     initial begin
         tempDivCLK = 'b0;
         count = 'd0;

@@ -22,38 +22,45 @@
 
 module Player(CLK, EN, hit, speed, hitOut, speedOut);
     input CLK, EN, hit, speed;
-    output reg hitOut, speedOut;
-
+    output reg hitOut;
+    output reg [1: 0] speedOut;
     // assign speedOut = speed;
 
+    // reg [31: 0] activeInterval = 'd0;
     reg [31: 0] activeInterval = 'd3000;
-    // reg [31: 0] activeInterval = 'd3000;
 
     reg [31: 0] interval;
+    reg hitTrigger;
  
     initial begin
         interval = 'd0;
+        hitTrigger = 'b0;
+        hitOut = 'b0;
+        speedOut = 'b1;
     end
 
 
     always @(posedge CLK) begin
-        if(hit) interval = 'd0;
-        else interval += 1;
-    end
-    
-    always @(hit) begin
-        if(EN) begin
-            if(hit) begin 
-                if(interval >= activeInterval)  hitOut = hit;
-            end 
-            else hitOut = hit;
-            speedOut = speed;
+        if(hitTrigger =='b0 && hit == 'b1) begin
+            if(interval >= activeInterval) begin
+                hitOut = hit;
+            end
         end
-        else begin 
-            hitOut = 'b0;
-            speedOut = 'b0;
+        else if(hitTrigger == 'b1 && hit == 'b0) begin
+            interval = 'd0;
+            hitOut = hit;
+        end
+        hitTrigger = hit;
+        interval += 1;
+
+        if(speed == 'b0) begin
+            speedOut = 'd00;
+        end
+        else begin
+            speedOut = 'd01;
         end
 
     end
+
 
 endmodule

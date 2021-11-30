@@ -20,21 +20,39 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Main(CLK, hitA, speedA, hitB, speedB, testOut);
+module Main(CLK, hitA, speedA, hitB, speedB, statusOut, ballLocation);
     input CLK, hitA, speedA, hitB, speedB;
-    output reg testOut;
-    
-    ClockDivider u1(CLK, dividedCLK);
 
-    wire hitOutA, speedOutA;
+
+    wire [2: 0] status;
+    output reg [3: 0] statusOut;
+    output wire [7: 0] ballLocation;
+    wire dividedCLK;
+    wire [1: 0] speedOutA;
+    wire [1: 0] speedOutB;
+    wire getScoreA, getScoreB;
+    ClockDivider clockDivider(CLK, dividedCLK);
+
+    // wire hitOutA, hitOutB, speedOuta, speedOutB;
+
     Player player1(dividedCLK, 'b1, hitA, speedA, hitOutA, speedOutA);
+    Player player2(dividedCLK, 'b1, hitB, speedB, hitOutB, speedOutB);
 
-    initial begin 
-        testOut = 'b1;
-    end
+    GameController gameController(dividedCLK, hitOutA, speedOutA, hitOutB, speedOutB, status, ballLocation, getScoreA, getScoreB);
 
-    always @(posedge hitOutA) begin
-        testOut = ~testOut;
+    always @(posedge dividedCLK) begin
+        if(status == 'b010) begin
+            statusOut = 'b1000;
+        end
+        else if(status == 'b001) begin
+            statusOut = 'b0001;
+        end
+        else if(status == 'b110) begin
+            statusOut = 'b0100;
+        end
+        else if(status == 'b101) begin
+            statusOut = 'b0010;
+        end
     end
 
 endmodule

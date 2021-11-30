@@ -22,32 +22,57 @@
 
 module SimMain();
 
-    parameter CLK_CYCLE = 10;
+    parameter CLK_CYCLE = 4;
 
     reg CLK;
+
+    reg hitA, hitB;
+    // wire testOut;
+    // wire [7: 0] ballLocation;
+    wire EnA, EnB;
+
     initial begin 
         CLK = 'b0;
+        hitA = 'b0;
+        // speedA = 'b0;
+        hitB = 'b0;
+        // speedB = 'b0;
     end
+
     always #(CLK_CYCLE/2) CLK = ~CLK;
 
-    reg hitA;
-    // wire testOut;
+    wire [2: 0] status;
 
-    Main main(CLK, hitA, 'b0, 'b0, 'b0);
+    Main main(CLK, hitA, hitB, status);
 
     initial begin 
         hitA = 'b0;
+        #200;
 
-        #225
         hitA = ~hitA;
 
-        #50
+        #50 
         hitA = ~hitA;
 
-        # 125
+        #50 
         hitA = ~hitA;
 
-        # 50
+        #50 
+        hitA = ~hitA;
+
+        #50 
+        hitA = ~hitA;
+
+        #50 
+        hitA = ~hitA;
+
+        #50 
+        hitA = ~hitA;
+
+        #50 
+        hitA = ~hitA;
+
+        #50 
         hitA = ~hitA;
     end
 
