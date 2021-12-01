@@ -50,7 +50,7 @@ module ScoreBoard(
         getScoreATrigger = getScoreA;
         getScoreBTrigger = getScoreB;
         
-        if(scoreA + scoreB > 'd5)
+        if(scoreA + scoreB >= 'd5)
             serviceSide = 'b1;
         if(scoreA + scoreB == 'd11)
             endGame = 'b1;

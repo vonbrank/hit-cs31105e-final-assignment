@@ -21,23 +21,23 @@
 
 
 module GameController(
-    CLK, hitA, speedA, hitB, speedB, status, ballLocation, getScoreA, getScoreB);
-
-    input CLK;
-    input reg hitA;
-    input reg hitB;
-    input [1: 0] speedA;
-    input [1: 0] speedB;
-    output reg [2: 0] status;
+    input CLK, 
+    input reg hitA, 
+    input [1: 0] speedA, 
+    input reg hitB, 
+    input [1: 0] speedB, 
+    input reg serviceSide,
+    output reg [2: 0] status, 
+    output reg [7: 0] ballLocation, 
+    output reg getScoreA, 
+    output reg getScoreB
+    );
 
     reg hitATrigger;
     reg hitBTrigger;
     reg [2: 0] speed;
     reg [15: 0] accurateBallLocation;
-    reg serviceSide;
-    output reg [7: 0] ballLocation;
-
-    output reg getScoreA, getScoreB;
+    // reg serviceSide;
 
 
     initial begin
@@ -46,7 +46,7 @@ module GameController(
         status = 'b010;
         accurateBallLocation = 'd2000;
         speed = 'd2;
-        serviceSide = 'b0;
+        // serviceSide = 'b0;
 
         getScoreA = 'b0;
         getScoreB = 'b0;
@@ -58,6 +58,8 @@ module GameController(
 
         if(status == 'b010 || status == 'b001) begin
             status = serviceSide == 'b0 ? 'b010 : 'b001;
+            getScoreA = 'b0;
+            getScoreB = 'b0;
         end
 
         if(status == 'b010) begin //A发球
@@ -98,11 +100,11 @@ module GameController(
             hitATrigger = hitA;
 
             if(accurateBallLocation < 'd500) begin
-                status = 'b010;
                 getScoreB = 'b1;
+                status = serviceSide == 'b0 ? 'b010 : 'b001;
             end 
 
-            accurateBallLocation -= speed;
+            accurateBallLocation -= speed * 'd2;
 
         end
         else if(status == 'b101) begin //B接球
@@ -116,11 +118,11 @@ module GameController(
             hitBTrigger = hitB;
 
             if(accurateBallLocation >'d11500) begin 
-                status = 'b010;
                 getScoreA = 'b1;
+                status = serviceSide == 'b0 ? 'b010 : 'b001;
             end 
 
-            accurateBallLocation += speed;
+            accurateBallLocation += speed * 'd2;
 
         end
 
@@ -133,7 +135,7 @@ module GameController(
         if(accurateBallLocation >= 'd6000 && accurateBallLocation < 'd7000) ballLocation = 'b00001000;
         if(accurateBallLocation >= 'd7000 && accurateBallLocation < 'd8000) ballLocation = 'b00000100;
         if(accurateBallLocation >= 'd8000 && accurateBallLocation < 'd9000) ballLocation = 'b00000010;
-        if(accurateBallLocation >= 'd9000 && accurateBallLocation < 'd10000) ballLocation = 'b00000001;
+        if(accurateBallLocation >= 'd9000 && accurateBallLocation <= 'd10000) ballLocation = 'b00000001;
 
     end
 

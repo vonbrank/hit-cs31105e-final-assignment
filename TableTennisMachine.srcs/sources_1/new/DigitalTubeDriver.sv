@@ -52,7 +52,7 @@ module DigitalTubeDriver(
             'd7: LED0 = 'b00000111;
             'd8: LED0 = 'b01111111;
             'd9: LED0 = 'b01101111;
-            default: LED0 = 'b11111111;
+            default: LED0 = 'b00000000;
         endcase
 
         case(count)
