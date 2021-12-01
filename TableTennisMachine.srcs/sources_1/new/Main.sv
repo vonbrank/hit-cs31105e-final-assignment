@@ -20,13 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Main(CLK, hitA, speedA, hitB, speedB, statusOut, ballLocation);
-    input CLK, hitA, speedA, hitB, speedB;
+module Main(
+    input CLK, 
+    input hitA, 
+    input speedA, 
+    input hitB, 
+    input speedB, 
+    output reg [3: 0] statusOut, 
+    output wire [7: 0] ballLocation
+    );
 
 
     wire [2: 0] status;
-    output reg [3: 0] statusOut;
-    output wire [7: 0] ballLocation;
     wire dividedCLK;
     wire [1: 0] speedOutA;
     wire [1: 0] speedOutB;
