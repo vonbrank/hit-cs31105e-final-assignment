@@ -26,6 +26,7 @@ module Main(
     input speedA, 
     input hitB, 
     input speedB, 
+    input reset,
     output reg [3: 0] statusOut, 
     output wire [7: 0] ballLocation,
     output wire [7:0] LED0, 
@@ -42,10 +43,16 @@ module Main(
     ClockDivider clockDivider(CLK, dividedCLK);
     wire serviceSide;
 
+    reg EnA;
+    reg EnB;
+    initial begin
+        EnA = 'b1;
+        EnB = 'b1;
+    end
     // wire hitOutA, hitOutB, speedOuta, speedOutB;
 
-    Player player1(dividedCLK, 'b1, hitA, speedA, hitOutA, speedOutA);
-    Player player2(dividedCLK, 'b1, hitB, speedB, hitOutB, speedOutB);
+    Player player1(dividedCLK, EnA, hitA, speedA, hitOutA, speedOutA);
+    Player player2(dividedCLK, EnB, hitB, speedB, hitOutB, speedOutB);
 
     GameController gameController(
         dividedCLK, 
@@ -54,6 +61,7 @@ module Main(
         hitOutB, 
         speedOutB, 
         serviceSide,
+        reset,
         status, 
         ballLocation, 
         getScoreA, 
@@ -88,7 +96,13 @@ module Main(
         count = 'd0;
     end
 
-    DigitalTubeDriver digitalTubeDriver(dividedCLK, dataIn, LED0, LED1, LEDBit);
+    DigitalTubeDriver digitalTubeDriver(
+        dividedCLK, 
+        dataIn, 
+        LED0, 
+        LED1, 
+        LEDBit
+    );
 
     
     wire endGame;
@@ -100,6 +114,7 @@ module Main(
         dividedCLK, 
         getScoreA, 
         getScoreB, 
+        reset,
         serviceSide, 
         endGame, 
         winner, 
@@ -112,28 +127,89 @@ module Main(
     reg [7:0] j;
     reg [31:0] countTemp;
     reg [31:0] countTemp2;
+    reg resetTrigger;
+    reg [31: 0] flowLightCount;
+    reg endGameTrigger;
+    initial begin
+        resetTrigger = 'b0;
+        flowLightCount = 'd0;
+        endGameTrigger = 'd0;
+    end
 
     always @(posedge dividedCLK) begin
-        if('d1 == 'd1) begin
-            i = 'd0;
-            // count += 1;
-            countTemp = scoreB;
-            while(countTemp > 0 && i < 'd2) begin
-                dataIn[i] = countTemp % 'd10;
-                countTemp /= 'd10;
-                i++;
+        
+        if(resetTrigger == 'b0 && reset == 'b1) begin
+            EnA = 'b1;
+            EnB = 'b1;
+            dataIn[2] = 'd100;
+            dataIn[3] = 'd100;
+            dataIn[4] = 'd100;
+            dataIn[5] = 'd100;
+            endGameTrigger = 'd0;
+        end
+        resetTrigger = reset;
+
+    
+        i = 'd0;
+        // count += 1;
+        countTemp = scoreB;
+        while(i < 'd2) begin
+            dataIn[i] = countTemp % 'd10;
+            countTemp /= 'd10;
+            i++;
+        end
+        
+
+        j = 'd6;
+        // count += 1;
+        countTemp2 = scoreA;
+        while(j < 'd8) begin
+            dataIn[j] = countTemp2 % 'd10;
+            countTemp2 /= 'd10;
+            j++;
+        end
+        
+        if(endGame == 'b1) begin
+            if(endGameTrigger == 'b0) begin
+                EnA = 'b0;
+                EnB = 'b0;
             end
 
-            j = 'd6;
-            // count += 1;
-            countTemp2 = scoreA;
-            while(countTemp2 > 0 && j < 'd8) begin
-                dataIn[j] = countTemp2 % 'd10;
-                countTemp2 /= 'd10;
-                j++;
+            if(winner == 'b10) begin
+                case(flowLightCount)
+                    'd100: dataIn[2] = 'd22;
+                    'd200: dataIn[3] = 'd22;
+                    'd300: dataIn[4] = 'd22;
+                    'd400: dataIn[5] = 'd22;
+                endcase
+                flowLightCount++;
+                if(flowLightCount == 'd500) begin
+                    flowLightCount = 'd0;
+                    dataIn[2] = 'd100;
+                    dataIn[3] = 'd100;
+                    dataIn[4] = 'd100;
+                    dataIn[5] = 'd100;
+                end 
+            end
+            else begin
+                case(flowLightCount)
+                    'd100: dataIn[5] = 'd21;
+                    'd200: dataIn[4] = 'd21;
+                    'd300: dataIn[3] = 'd21;
+                    'd400: dataIn[2] = 'd21;
+                endcase
+                flowLightCount++;
+                if(flowLightCount == 'd500) begin
+                    flowLightCount = 'd0;
+                    dataIn[2] = 'd100;
+                    dataIn[3] = 'd100;
+                    dataIn[4] = 'd100;
+                    dataIn[5] = 'd100;
+                end 
             end
         end
 
+        endGameTrigger = endGame;
 
     end
 

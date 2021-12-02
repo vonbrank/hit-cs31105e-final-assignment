@@ -170,6 +170,7 @@
       </Config>
     </FileSet>
     <FileSet Name="sim_2" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_2">
+      <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sim_2/new/SimTest.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>

@@ -84,3 +84,6 @@ set_property PACKAGE_PIN G1 [get_ports {LEDBit[4]}]
 set_property PACKAGE_PIN F1 [get_ports {LEDBit[5]}]
 set_property PACKAGE_PIN E1 [get_ports {LEDBit[6]}]
 set_property PACKAGE_PIN G6 [get_ports {LEDBit[7]}]
+
+set_property IOSTANDARD LVCMOS33 [get_ports reset]
+set_property PACKAGE_PIN P2 [get_ports reset]
