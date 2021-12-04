@@ -20,18 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module GameController(
+module GameController(  //全局状态控制器
     input CLK, 
-    input reg hitA, 
-    input [1: 0] speedA, 
-    input reg hitB, 
-    input [1: 0] speedB, 
-    input reg serviceSide,
-    input reg reset,
-    output reg [2: 0] status, 
-    output reg [7: 0] ballLocation, 
-    output reg getScoreA, 
-    output reg getScoreB
+    input reg hitA, //玩家A输入
+    input [1: 0] speedA, //玩家A速度
+    input reg hitB,  //玩家B输入
+    input [1: 0] speedB,  //玩家B速度
+    input reg serviceSide, //发球方
+    input reg reset,    //重置
+    output reg [2: 0] status, //全局状态
+    output reg [7: 0] ballLocation, //球位置
+    output reg getScoreA,   //A得分
+    output reg getScoreB    //B得分
     );
 
     reg hitATrigger;
@@ -42,7 +42,7 @@ module GameController(
     // reg serviceSide;
 
 
-    initial begin
+    initial begin   //初始化变量
         hitATrigger = 'b0;
         hitBTrigger = 'b0;
         status = 'b010;
@@ -57,7 +57,7 @@ module GameController(
 
 
 
-    always @(posedge CLK) begin 
+    always @(posedge CLK) begin     //根据报告所述转换状态
         if(resetTrigger == 'b0 && reset == 'b1) begin
             hitATrigger = 'b0;
             hitBTrigger = 'b0;

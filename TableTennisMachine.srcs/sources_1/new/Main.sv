@@ -54,7 +54,7 @@ module Main(
     Player player1(dividedCLK, EnA, hitA, speedA, hitOutA, speedOutA);
     Player player2(dividedCLK, EnB, hitB, speedB, hitOutB, speedOutB);
 
-    GameController gameController(
+    GameController gameController(  //调用全局状态控制器
         dividedCLK, 
         hitOutA, 
         speedOutA, 
@@ -96,7 +96,7 @@ module Main(
         count = 'd0;
     end
 
-    DigitalTubeDriver digitalTubeDriver(
+    DigitalTubeDriver digitalTubeDriver(    //调用数码管驱动
         dividedCLK, 
         dataIn, 
         LED0, 
@@ -169,7 +169,7 @@ module Main(
             j++;
         end
         
-        if(endGame == 'b1) begin
+        if(endGame == 'b1) begin    //游戏结束时显示箭头指向赢的玩家
             if(endGameTrigger == 'b0) begin
                 EnA = 'b0;
                 EnB = 'b0;

@@ -52,7 +52,7 @@ module ScoreBoard(
             scoreA = 'b0;
             scoreB = 'b0;
         end
-        else begin
+        else begin  //getScoreA或getScoreB出现上升沿，对应玩家得分
             if(getScoreATrigger == 'b0 && getScoreA == 'b1)
                 scoreA ++;
             if(getScoreBTrigger == 'b0 && getScoreB == 'b1)
@@ -61,14 +61,14 @@ module ScoreBoard(
             getScoreATrigger = getScoreA;
             getScoreBTrigger = getScoreB;
             
-            if((scoreA + scoreB) / 5 % 2 == 'd0)
+            if((scoreA + scoreB) / 5 % 2 == 'd0)    //每5个球换发
                 serviceSide = 'b0;
             else
                 serviceSide = 'b1;
-            if(scoreA + scoreB == 'd11)
+            if(scoreA + scoreB == 'd11) //到达11个球时游戏结束
                 endGame = 'b1;
 
-            if(endGame == 1) begin
+            if(endGame == 1) begin  //游戏结束时判断赢的那方
                 if(scoreA > scoreB)
                 winner = 'b10;
                 else if(scoreA < scoreB)

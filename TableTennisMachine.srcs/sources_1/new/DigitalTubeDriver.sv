@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module DigitalTubeDriver(
+module DigitalTubeDriver(   //数码管驱动
     input CLK, 
-    input reg [7:0][7:0] dataIn, 
-    output reg [7:0] LED0, 
-    output reg [7:0] LED1, 
-    output reg [7:0] LEDBit
+    input reg [7:0][7:0] dataIn,    //输入数据
+    output reg [7:0] LED0,  //输出的LED0，管理前4位显示
+    output reg [7:0] LED1,  //输出的LED1，管理后4位显示
+    output reg [7:0] LEDBit //LEDBIT，管理每个亮或不亮
     );
 
     reg [3:0] count;
@@ -42,7 +42,7 @@ module DigitalTubeDriver(
 
     always @(posedge CLK) begin
 
-        case(dataIn[count])
+        case(dataIn[count]) //检查每种数字或符号对应亮哪些边
             'd0: LED0 = 'b00111111;
             'd1: LED0 = 'b00000110;
             'd2: LED0 = 'b01011011;
@@ -70,43 +70,6 @@ module DigitalTubeDriver(
             count++;
             LEDBit = LEDBit >> 1;
         end
-
-        // case(count)
-        //     'd0: begin
-        //         LEDBit = 'b10000000;
-        //         count = 'd1;
-        //     end
-        //     'd1: begin 
-        //         LEDBit = 'b01000000;
-        //         count = 'd2;
-        //     end 
-        //     'd2: begin 
-        //         LEDBit = 'b00100000;
-        //         count = 'd3;
-        //     end 
-        //     'd3: begin 
-        //         LEDBit = 'b00010000;
-        //         count = 'd4;
-        //     end 
-        //     'd4: begin 
-        //         LEDBit = 'b00001000;
-        //         count = 'd5;
-        //     end 
-        //     'd5: begin 
-        //         LEDBit = 'b00000100;
-        //         count = 'd6;
-        //     end 
-        //     'd6: begin 
-        //         LEDBit = 'b00000010;
-        //         count = 'd7;
-        //     end 
-        //     'd7: begin 
-        //         LEDBit = 'b00000001;
-        //         count = 'd0;
-        //     end 
-        //     default: count = 'd0;
-        // endcase
-
         LED1 = LED0;
 
     end

@@ -27,7 +27,7 @@ module Player(CLK, EN, hit, speed, hitOut, speedOut);
     // assign speedOut = speed;
 
     // reg [31: 0] activeInterval = 'd0;
-    reg [31: 0] activeInterval = 'd1000;
+    reg [31: 0] activeInterval = 'd1000;    //一个下降沿到下一个上升沿直接最小时间间隔
 
     reg [31: 0] interval;
     reg hitTrigger;

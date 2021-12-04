@@ -26,7 +26,7 @@ module ClockDivider(originCLK, dividedCLK);
     reg tempDivCLK;
     reg [31: 0] count;
     // reg [31: 0] ratio = 'd2;
-    reg [31: 0] ratio = 'd100_000;
+    reg [31: 0] ratio = 'd100_000;  //时钟分频器，将板载100MHz分频为1000Hz
     initial begin
         tempDivCLK = 'b0;
         count = 'd0;
